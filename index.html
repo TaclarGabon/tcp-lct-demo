@@ -231,7 +231,7 @@ button{
 <script>
 let currentRole = null;
 
-const tcpExample = `Please confirm May-27-2026 - Wednesday job at 0630 for Fraser Crossing GP - Patullo Bridge Replacement in Surrey at 12246 112a Ave do No TMP - Hand-drawn Req.. - Celine 604-329-6092 PO PBR-PO-GEN-16472`;
+const tcpExample = `Please confirm Jul-30-2026 - Thursday job at 0700 for Forbes Bros Ltd. in Richmond at 7820 Thormaby Cres do (TMP on SiteDocs). - Jason Rocha 431-374-2272 PO 281060046`;
 
 const lctExample = `Please confirm July 30 2026 job at 0630 for BC Hydro in Surrey at 10200 King George Blvd. LCT truck SCT019 TMP 24-118. Foreman Daniel 604-555-0198 PO BCH-2026-4451`;
 
@@ -260,7 +260,9 @@ function loadExample(){
   document.getElementById('dispatchText').value = currentRole === 'tcp' ? tcpExample : lctExample;
 }
 function normalizeTime(s){
-  const m=s.match(/\b(?:at\s*)?([01]?\d|2[0-3])[:h]?([0-5]\d)\b/i);
+  // Priorité à l’heure annoncée après « job at » afin de ne jamais lire l’année 2026 comme 20:26.
+  let m=s.match(/\bjob\s+at\s+([01]?\d|2[0-3])[:h]?([0-5]\d)\b/i);
+  if(!m) m=s.match(/\b(?:start|time)\s*(?:at|:)\s*([01]?\d|2[0-3])[:h]?([0-5]\d)\b/i);
   if(!m) return 'À confirmer';
   return String(m[1]).padStart(2,'0')+':'+m[2];
 }
@@ -299,7 +301,7 @@ function analyzeDispatch(){
   const poMatch=s.match(/\bPO\s+([A-Z0-9-]+)\b/i);
   const po=poMatch?poMatch[1]:'À confirmer';
 
-  const addressMatch=s.match(/\bin\s+(?:Surrey|Langley|Richmond|Delta|Coquitlam|Port Moody|Maple Ridge|Burnaby|Vancouver|North Vancouver|West Vancouver|East Vancouver)\s+at\s+(.+?)(?=\s+(?:do\s+)?(?:No\s+)?TMP\b|\s+on\s+SiteDocs\b|\s+SiteDocs\b|[,;]?\s+Truck\s+[A-Z0-9-]+\b|\s+LCT\b|\s+Foreman\b|\s+PO\b|\s+\d{3}[-.\s]\d{3}[-.\s]\d{4}\b|$)/i);
+  const addressMatch=s.match(/\bin\s+(?:Surrey|Langley|Richmond|Delta|Coquitlam|Port Moody|Maple Ridge|Burnaby|Vancouver|North Vancouver|West Vancouver|East Vancouver)\s+at\s+(.+?)(?=\s+do\b|\s+(?:No\s+)?TMP\b|\s+on\s+SiteDocs\b|\s+SiteDocs\b|[,;]?\s+Truck\s+[A-Z0-9-]+\b|\s+LCT\b|\s+Foreman\b|\s+PO\b|\s+\d{3}[-.\s]\d{3}[-.\s]\d{4}\b|$)/i);
   const address=addressMatch?addressMatch[1].replace(/[.,;:-]+$/,'').trim():'À confirmer';
 
   const clientMatch=s.match(/\bfor\s+(.+?)(?=\s+-\s+|\s+in\s+(?:Surrey|Langley|Richmond|Delta|Coquitlam|Port Moody|Maple Ridge|Burnaby|Vancouver))/i);
