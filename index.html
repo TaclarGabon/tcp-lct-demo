@@ -225,7 +225,7 @@ button{
     </div>
   </section>
 
-  <div class="footer">Prototype autonome — aucune connexion Firebase</div>
+  <div class="footer">Prototype autonome — aucune connexion Firebase — V1.3</div>
 </div>
 
 <script>
@@ -260,11 +260,17 @@ function loadExample(){
   document.getElementById('dispatchText').value = currentRole === 'tcp' ? tcpExample : lctExample;
 }
 function normalizeTime(s){
-  // Priorité à l’heure annoncée après « job at » afin de ne jamais lire l’année 2026 comme 20:26.
-  let m=s.match(/\bjob\s+at\s+([01]?\d|2[0-3])[:h]?([0-5]\d)\b/i);
-  if(!m) m=s.match(/\b(?:start|time)\s*(?:at|:)\s*([01]?\d|2[0-3])[:h]?([0-5]\d)\b/i);
+  // Lire uniquement l’heure placée après « job at ».
+  // Exemple : « job at 0700 » devient 07:00. L’année 2026 ne peut donc jamais être prise pour une heure.
+  const m = s.match(/\bjob\s+at\s+(\d{3,4})\b/i);
   if(!m) return 'À confirmer';
-  return String(m[1]).padStart(2,'0')+':'+m[2];
+
+  const raw = m[1].padStart(4,'0');
+  const hours = Number(raw.slice(0,2));
+  const minutes = Number(raw.slice(2,4));
+
+  if(hours > 23 || minutes > 59) return 'À confirmer';
+  return raw.slice(0,2) + ':' + raw.slice(2,4);
 }
 function detectDate(s){
   let m=s.match(/\b([A-Za-z]+)[-\s](\d{1,2})[-,\s](\d{4})\b/);
@@ -301,8 +307,22 @@ function analyzeDispatch(){
   const poMatch=s.match(/\bPO\s+([A-Z0-9-]+)\b/i);
   const po=poMatch?poMatch[1]:'À confirmer';
 
-  const addressMatch=s.match(/\bin\s+(?:Surrey|Langley|Richmond|Delta|Coquitlam|Port Moody|Maple Ridge|Burnaby|Vancouver|North Vancouver|West Vancouver|East Vancouver)\s+at\s+(.+?)(?=\s+do\b|\s+(?:No\s+)?TMP\b|\s+on\s+SiteDocs\b|\s+SiteDocs\b|[,;]?\s+Truck\s+[A-Z0-9-]+\b|\s+LCT\b|\s+Foreman\b|\s+PO\b|\s+\d{3}[-.\s]\d{3}[-.\s]\d{4}\b|$)/i);
-  const address=addressMatch?addressMatch[1].replace(/[.,;:-]+$/,'').trim():'À confirmer';
+  // L’adresse commence après « [ville] at » et s’arrête impérativement avant « do ».
+  // Tout ce qui suit « do » est une instruction de travail, pas une partie de l’adresse.
+  const addressStart=s.match(/\bin\s+(?:Surrey|Langley|Richmond|Delta|Coquitlam|Port Moody|Maple Ridge|Burnaby|Vancouver|North Vancouver|West Vancouver|East Vancouver)\s+at\s+/i);
+  let address='À confirmer';
+  if(addressStart){
+    let addressTail=s.slice(addressStart.index + addressStart[0].length);
+    addressTail=addressTail.split(/\s+do\b/i)[0];
+    addressTail=addressTail.split(/\s+(?:No\s+)?TMP\b/i)[0];
+    addressTail=addressTail.split(/\s+SiteDocs\b/i)[0];
+    addressTail=addressTail.split(/[,;]?\s+Truck\s+[A-Z0-9-]+\b/i)[0];
+    addressTail=addressTail.split(/\s+LCT\b/i)[0];
+    addressTail=addressTail.split(/\s+Foreman\b/i)[0];
+    addressTail=addressTail.split(/\s+PO\b/i)[0];
+    addressTail=addressTail.split(/\s+\d{3}[-.\s]\d{3}[-.\s]\d{4}\b/i)[0];
+    address=addressTail.replace(/[.,;:()\-]+$/,'').trim() || 'À confirmer';
+  }
 
   const clientMatch=s.match(/\bfor\s+(.+?)(?=\s+-\s+|\s+in\s+(?:Surrey|Langley|Richmond|Delta|Coquitlam|Port Moody|Maple Ridge|Burnaby|Vancouver))/i);
   const client=clientMatch?clientMatch[1].trim():'À confirmer';
