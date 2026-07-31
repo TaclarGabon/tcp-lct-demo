@@ -40,6 +40,10 @@ body{
 .brand h1{margin:0;font-size:22px}
 .brand p{margin:3px 0 0;color:#d7eeee;font-size:12px}
 .badge{background:rgba(255,255,255,.14);padding:8px 11px;border-radius:999px;font-size:12px}
+.header-actions{display:flex;align-items:center;gap:8px}
+.lang-switch{display:flex;gap:6px;background:rgba(255,255,255,.12);padding:5px;border-radius:14px}
+.lang-btn{padding:7px 9px;border-radius:10px;background:transparent;color:#fff;font-size:18px;line-height:1;opacity:.68}
+.lang-btn.active{background:#fff;color:#17323b;opacity:1;box-shadow:0 3px 10px rgba(0,0,0,.15)}
 .notice{
   margin:14px 0 0;padding:11px 13px;border-radius:14px;
   border:1px dashed #9abdb9;background:#f8fdfc;color:#3b626b;font-size:13px
@@ -112,6 +116,8 @@ button{
   .field.full{grid-column:auto}
   .topbar{align-items:flex-start}
   .badge{display:none}
+  .header-actions{align-items:flex-start}
+  .lang-btn{font-size:17px;padding:7px 8px}
 }
 </style>
 </head>
@@ -122,63 +128,69 @@ button{
       <div class="logo">🚧</div>
       <div>
         <h1>Module TCP / LCT</h1>
-        <p>Assistant de lecture des dispatchs</p>
+        <p data-i18n="brandSubtitle">Assistant de lecture des dispatchs</p>
       </div>
     </div>
-    <div class="badge">DÉMO HTML</div>
+    <div class="header-actions">
+      <div class="lang-switch" aria-label="Language / Langue">
+        <button class="lang-btn active" id="langFr" onclick="setLanguage('fr')" aria-label="Français" title="Français">🇫🇷</button>
+        <button class="lang-btn" id="langEn" onclick="setLanguage('en')" aria-label="English" title="English">🇨🇦</button>
+      </div>
+      <div class="badge" data-i18n="demoBadge">DÉMO HTML</div>
+    </div>
   </header>
 
   <div class="notice">
-    Nom et identité visuelle provisoires. Aucun logo Bearclaw ou TACLAR n’est utilisé dans cette démo.
+    <span data-i18n="notice">Nom et identité visuelle provisoires. Aucun logo Bearclaw ou TACLAR n’est utilisé dans cette démo.</span>
   </div>
 
   <section id="home" class="card">
-    <h2>Comment travailles-tu aujourd’hui ?</h2>
-    <p class="subtitle">Choisis ton rôle avant de coller le message du dispatch.</p>
+    <h2 data-i18n="homeTitle">Comment travailles-tu aujourd’hui ?</h2>
+    <p class="subtitle" data-i18n="homeSubtitle">Choisis ton rôle avant de coller le message du dispatch.</p>
 
     <div class="role-grid">
       <div class="role-card" onclick="selectRole('tcp')">
         <div class="role-icon">🦺</div>
         <h3>TCP</h3>
-        <p>Mission de Traffic Control Person, généralement sans camion LCT et sans gestion complète de fermeture de voie.</p>
+        <p data-i18n="tcpCard">Mission de Traffic Control Person, généralement sans camion LCT et sans gestion complète de fermeture de voie.</p>
       </div>
       <div class="role-card" onclick="selectRole('lct')">
         <div class="role-icon">🚚</div>
         <h3>LCT</h3>
-        <p>Mission de Lane Closure Technician avec camion, TMP, matériel et informations de fermeture de voie.</p>
+        <p data-i18n="lctCard">Mission de Lane Closure Technician avec camion, TMP, matériel et informations de fermeture de voie.</p>
       </div>
     </div>
 
     <div class="examples">
-      <strong>Principe :</strong> l’utilisateur choisit d’abord TCP ou LCT. L’application ne doit donc plus deviner entièrement le rôle à partir du texte.
+      <strong data-i18n="principleLabel">Principe :</strong> <span data-i18n="principleText">l’utilisateur choisit d’abord TCP ou LCT. L’application ne doit donc plus deviner entièrement le rôle à partir du texte.</span>
     </div>
   </section>
 
   <section id="importScreen" class="card hidden">
-    <button class="back" onclick="goHome()">← Changer de rôle</button>
-    <h2 id="importTitle">Nouveau dispatch</h2>
+    <button class="back" onclick="goHome()"><span data-i18n="changeRole">← Changer de rôle</span></button>
+    <h2 id="importTitle" data-i18n="newDispatch">Nouveau dispatch</h2>
     <p class="subtitle" id="importSubtitle"></p>
 
-    <textarea id="dispatchText" placeholder="Colle ici le message reçu du dispatch..."></textarea>
+    <textarea id="dispatchText" data-i18n-placeholder="dispatchPlaceholder" placeholder="Colle ici le message reçu du dispatch..."></textarea>
 
     <div class="choice">
-      <button class="secondary" onclick="loadExample()">Charger un exemple</button>
-      <button class="primary" onclick="analyzeDispatch()">Analyser le dispatch</button>
+      <button class="secondary" onclick="loadExample()" data-i18n="loadExample">Charger un exemple</button>
+      <button class="primary" onclick="analyzeDispatch()" data-i18n="analyze">Analyser le dispatch</button>
     </div>
   </section>
 
   <section id="resultScreen" class="card hidden">
-    <button class="back" onclick="backToImport()">← Retour au message</button>
+    <button class="back" onclick="backToImport()"><span data-i18n="backMessage">← Retour au message</span></button>
 
     <div class="summary">
       <div>
-        <h2>Dispatch analysé</h2>
-        <p class="subtitle">Vérifie les informations avant de les enregistrer.</p>
+        <h2 data-i18n="analyzedTitle">Dispatch analysé</h2>
+        <p class="subtitle" data-i18n="verifySubtitle">Vérifie les informations avant de les enregistrer.</p>
       </div>
-      <div class="status">PRÊT</div>
+      <div class="status" data-i18n="ready">PRÊT</div>
     </div>
 
-    <div class="section-title">Type de mission</div>
+    <div class="section-title" data-i18n="missionType">Type de mission</div>
     <div class="role-banner">
       <div class="big" id="roleIcon">🦺</div>
       <div>
@@ -187,49 +199,128 @@ button{
       </div>
     </div>
 
-    <div class="section-title">Informations principales</div>
+    <div class="section-title" data-i18n="mainInfo">Informations principales</div>
     <div class="grid">
-      <div class="field"><div class="label">Date</div><div class="value" id="dateOut">—</div></div>
-      <div class="field"><div class="label">Heure</div><div class="value" id="timeOut">—</div></div>
-      <div class="field"><div class="label">Client</div><div class="value" id="clientOut">—</div></div>
-      <div class="field"><div class="label">Projet</div><div class="value" id="projectOut">—</div></div>
-      <div class="field"><div class="label">Ville</div><div class="value" id="cityOut">—</div></div>
-      <div class="field"><div class="label">Adresse</div><div class="value" id="addressOut">—</div></div>
+      <div class="field"><div class="label" data-i18n="date">Date</div><div class="value" id="dateOut">—</div></div>
+      <div class="field"><div class="label" data-i18n="time">Heure</div><div class="value" id="timeOut">—</div></div>
+      <div class="field"><div class="label" data-i18n="client">Client</div><div class="value" id="clientOut">—</div></div>
+      <div class="field"><div class="label" data-i18n="project">Projet</div><div class="value" id="projectOut">—</div></div>
+      <div class="field"><div class="label" data-i18n="city">Ville</div><div class="value" id="cityOut">—</div></div>
+      <div class="field"><div class="label" data-i18n="address">Adresse</div><div class="value" id="addressOut">—</div></div>
     </div>
 
-    <div class="section-title">Détails du dispatch</div>
+    <div class="section-title" data-i18n="dispatchDetails">Détails du dispatch</div>
 
     <div id="tcpDetails" class="rows hidden">
-      <div class="row"><span>Rôle</span><strong>TCP</strong></div>
-      <div class="row"><span>Truck</span><strong>Not required</strong></div>
+      <div class="row"><span data-i18n="role">Rôle</span><strong>TCP</strong></div>
+      <div class="row"><span data-i18n="truck">Truck</span><strong id="tcpTruckStatus" data-status="notRequired">Non requis</strong></div>
       <div class="row"><span>TMP</span><strong id="tcpTmp">No TMP</strong></div>
-      <div class="row"><span>Hand-drawn</span><strong id="handDrawn">Required</strong></div>
-      <div class="row"><span>Foreman</span><strong id="tcpForeman">—</strong></div>
-      <div class="row"><span>Foreman Phone</span><strong id="tcpPhone">—</strong></div>
-      <div class="row"><span>PO Number</span><strong id="tcpPo">—</strong></div>
+      <div class="row"><span data-i18n="handDrawn">Plan dessiné</span><strong id="handDrawn">Required</strong></div>
+      <div class="row"><span data-i18n="foreman">Foreman</span><strong id="tcpForeman">—</strong></div>
+      <div class="row"><span data-i18n="foremanPhone">Téléphone du foreman</span><strong id="tcpPhone">—</strong></div>
+      <div class="row"><span data-i18n="poNumber">Numéro de PO</span><strong id="tcpPo">—</strong></div>
     </div>
 
     <div id="lctDetails" class="rows hidden">
-      <div class="row"><span>Rôle</span><strong>LCT</strong></div>
-      <div class="row"><span>Truck</span><strong id="lctTruck">À confirmer</strong></div>
+      <div class="row"><span data-i18n="role">Rôle</span><strong>LCT</strong></div>
+      <div class="row"><span data-i18n="truck">Truck</span><strong id="lctTruck">À confirmer</strong></div>
       <div class="row"><span>TMP</span><strong id="lctTmp">À confirmer</strong></div>
-      <div class="row"><span>Linemen Crew</span><strong id="crewOut">À confirmer</strong></div>
-      <div class="row"><span>Foreman</span><strong id="lctForeman">—</strong></div>
-      <div class="row"><span>Foreman Phone</span><strong id="lctPhone">—</strong></div>
-      <div class="row"><span>PO Number</span><strong id="lctPo">—</strong></div>
+      <div class="row"><span data-i18n="linemenCrew">Équipe de monteurs de lignes</span><strong id="crewOut">À confirmer</strong></div>
+      <div class="row"><span data-i18n="foreman">Foreman</span><strong id="lctForeman">—</strong></div>
+      <div class="row"><span data-i18n="foremanPhone">Téléphone du foreman</span><strong id="lctPhone">—</strong></div>
+      <div class="row"><span data-i18n="poNumber">Numéro de PO</span><strong id="lctPo">—</strong></div>
     </div>
 
     <div class="actions">
-      <button class="secondary" onclick="backToImport()">✏️ Corriger</button>
-      <button class="primary" onclick="alert('Démo seulement : aucun enregistrement effectué.')">✓ Valider le dispatch</button>
+      <button class="secondary" onclick="backToImport()" data-i18n="correct">✏️ Corriger</button>
+      <button class="primary" onclick="showDemoAlert()" data-i18n="validate">✓ Valider le dispatch</button>
     </div>
   </section>
 
-  <div class="footer">Prototype autonome — aucune connexion Firebase — V1.3</div>
+  <div class="footer"><span data-i18n="footer">Prototype autonome — aucune connexion Firebase</span> — V1.4</div>
 </div>
 
 <script>
 let currentRole = null;
+let currentLanguage = localStorage.getItem('tcpLctLanguage') || 'fr';
+
+const translations = {
+  fr: {
+    brandSubtitle:'Assistant de lecture des dispatchs', demoBadge:'DÉMO HTML',
+    notice:'Nom et identité visuelle provisoires. Aucun logo Bearclaw ou TACLAR n’est utilisé dans cette démo.',
+    homeTitle:'Comment travailles-tu aujourd’hui ?', homeSubtitle:'Choisis ton rôle avant de coller le message du dispatch.',
+    tcpCard:'Mission de Traffic Control Person, généralement sans camion LCT et sans gestion complète de fermeture de voie.',
+    lctCard:'Mission de Lane Closure Technician avec camion, TMP, matériel et informations de fermeture de voie.',
+    principleLabel:'Principe :', principleText:'l’utilisateur choisit d’abord TCP ou LCT. L’application ne doit donc plus deviner entièrement le rôle à partir du texte.',
+    changeRole:'← Changer de rôle', newDispatch:'Nouveau dispatch', dispatchPlaceholder:'Colle ici le message reçu du dispatch...',
+    loadExample:'Charger un exemple', analyze:'Analyser le dispatch', backMessage:'← Retour au message',
+    analyzedTitle:'Dispatch analysé', verifySubtitle:'Vérifie les informations avant de les enregistrer.', ready:'PRÊT',
+    missionType:'Type de mission', mainInfo:'Informations principales', dispatchDetails:'Détails du dispatch',
+    date:'Date', time:'Heure', client:'Client', project:'Projet', city:'Ville', address:'Adresse', role:'Rôle',
+    truck:'Camion', handDrawn:'Plan dessiné', foreman:'Foreman', foremanPhone:'Téléphone du foreman',
+    poNumber:'Numéro de PO', linemenCrew:'Équipe de monteurs de lignes', correct:'✏️ Corriger', validate:'✓ Valider le dispatch',
+    footer:'Prototype autonome — aucune connexion Firebase', confirm:'À confirmer', notRequired:'Non requis', noTmp:'Aucun TMP',
+    required:'Requis', tcpImport:'Nouveau dispatch TCP', lctImport:'Nouveau dispatch LCT',
+    tcpImportSubtitle:'Colle le message reçu pour une mission TCP.', lctImportSubtitle:'Colle le message reçu pour une mission LCT.',
+    emptyAlert:'Colle d’abord un message de dispatch.', demoAlert:'Démo seulement : aucun enregistrement effectué.',
+    tcpDesc:'Le rôle a été choisi avant l’import. Le module n’exige donc ni camion LCT ni TMP.',
+    lctDesc:'Le rôle a été choisi avant l’import. Le module affiche les informations liées au camion, au TMP et à l’équipe.'
+  },
+  en: {
+    brandSubtitle:'Dispatch reading assistant', demoBadge:'HTML DEMO',
+    notice:'Temporary name and visual identity. No Bearclaw or TACLAR logo is used in this demo.',
+    homeTitle:'How are you working today?', homeSubtitle:'Choose your role before pasting the dispatch message.',
+    tcpCard:'Traffic Control Person assignment, generally without an LCT truck or full lane-closure management.',
+    lctCard:'Lane Closure Technician assignment with truck, TMP, equipment and lane-closure information.',
+    principleLabel:'How it works:', principleText:'the user first chooses TCP or LCT, so the application does not have to guess the role entirely from the text.',
+    changeRole:'← Change role', newDispatch:'New dispatch', dispatchPlaceholder:'Paste the dispatch message here...',
+    loadExample:'Load an example', analyze:'Analyze dispatch', backMessage:'← Back to message',
+    analyzedTitle:'Dispatch analyzed', verifySubtitle:'Check the information before saving it.', ready:'READY',
+    missionType:'Assignment type', mainInfo:'Main information', dispatchDetails:'Dispatch details',
+    date:'Date', time:'Time', client:'Client', project:'Project', city:'City', address:'Address', role:'Role',
+    truck:'Truck', handDrawn:'Hand-drawn plan', foreman:'Foreman', foremanPhone:'Foreman phone',
+    poNumber:'PO number', linemenCrew:'Linemen crew', correct:'✏️ Edit', validate:'✓ Confirm dispatch',
+    footer:'Standalone prototype — no Firebase connection', confirm:'To be confirmed', notRequired:'Not required', noTmp:'No TMP',
+    required:'Required', tcpImport:'New TCP dispatch', lctImport:'New LCT dispatch',
+    tcpImportSubtitle:'Paste the message received for a TCP assignment.', lctImportSubtitle:'Paste the message received for an LCT assignment.',
+    emptyAlert:'Paste a dispatch message first.', demoAlert:'Demo only: nothing has been saved.',
+    tcpDesc:'The role was selected before import. The module therefore requires neither an LCT truck nor a TMP.',
+    lctDesc:'The role was selected before import. The module displays truck, TMP and crew information.'
+  }
+};
+
+function t(key){ return translations[currentLanguage][key] || key; }
+
+function setLanguage(lang){
+  currentLanguage = lang;
+  localStorage.setItem('tcpLctLanguage', lang);
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.placeholder = t(el.dataset.i18nPlaceholder); });
+  document.getElementById('langFr').classList.toggle('active', lang === 'fr');
+  document.getElementById('langEn').classList.toggle('active', lang === 'en');
+  updateDynamicLanguage();
+}
+
+function updateDynamicLanguage(){
+  if(currentRole){
+    document.getElementById('importTitle').textContent = currentRole === 'tcp' ? t('tcpImport') : t('lctImport');
+    document.getElementById('importSubtitle').textContent = currentRole === 'tcp' ? t('tcpImportSubtitle') : t('lctImportSubtitle');
+    document.getElementById('roleDesc').textContent = currentRole === 'tcp' ? t('tcpDesc') : t('lctDesc');
+  }
+  const truckStatus=document.getElementById('tcpTruckStatus');
+  if(truckStatus) truckStatus.textContent=t('notRequired');
+  ['projectOut','timeOut','clientOut','cityOut','addressOut','tcpForeman','tcpPhone','tcpPo','lctTruck','lctTmp','crewOut','lctForeman','lctPhone','lctPo'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && (el.textContent==='À confirmer' || el.textContent==='To be confirmed')) el.textContent=t('confirm');
+  });
+  const tcpTmp=document.getElementById('tcpTmp');
+  if(tcpTmp && (tcpTmp.textContent==='Aucun TMP' || tcpTmp.textContent==='No TMP')) tcpTmp.textContent=t('noTmp');
+  const hand=document.getElementById('handDrawn');
+  if(hand && (hand.textContent==='Requis' || hand.textContent==='Required')) hand.textContent=t('required');
+}
+
+function showDemoAlert(){ alert(t('demoAlert')); }
 
 const tcpExample = `Please confirm Jul-30-2026 - Thursday job at 0700 for Forbes Bros Ltd. in Richmond at 7820 Thormaby Cres do (TMP on SiteDocs). - Jason Rocha 431-374-2272 PO 281060046`;
 
@@ -240,10 +331,10 @@ function selectRole(role){
   document.getElementById('home').classList.add('hidden');
   document.getElementById('resultScreen').classList.add('hidden');
   document.getElementById('importScreen').classList.remove('hidden');
-  document.getElementById('importTitle').textContent = role === 'tcp' ? 'Nouveau dispatch TCP' : 'Nouveau dispatch LCT';
+  document.getElementById('importTitle').textContent = role === 'tcp' ? t('tcpImport') : t('lctImport');
   document.getElementById('importSubtitle').textContent = role === 'tcp'
-    ? 'Colle le message reçu pour une mission TCP.'
-    : 'Colle le message reçu pour une mission LCT.';
+    ? t('tcpImportSubtitle')
+    : t('lctImportSubtitle');
   document.getElementById('dispatchText').value = '';
 }
 function goHome(){
@@ -263,13 +354,13 @@ function normalizeTime(s){
   // Lire uniquement l’heure placée après « job at ».
   // Exemple : « job at 0700 » devient 07:00. L’année 2026 ne peut donc jamais être prise pour une heure.
   const m = s.match(/\bjob\s+at\s+(\d{3,4})\b/i);
-  if(!m) return 'À confirmer';
+  if(!m) return t('confirm');
 
   const raw = m[1].padStart(4,'0');
   const hours = Number(raw.slice(0,2));
   const minutes = Number(raw.slice(2,4));
 
-  if(hours > 23 || minutes > 59) return 'À confirmer';
+  if(hours > 23 || minutes > 59) return t('confirm');
   return raw.slice(0,2) + ':' + raw.slice(2,4);
 }
 function detectDate(s){
@@ -277,40 +368,40 @@ function detectDate(s){
   if(m) return `${m[1]} ${m[2]}, ${m[3]}`;
   m=s.match(/\b(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})\b/);
   if(m) return `${m[1]}/${m[2]}/${m[3]}`;
-  return 'À confirmer';
+  return t('confirm');
 }
-function matchOr(s,re,fallback='À confirmer'){
+function matchOr(s,re,fallback=t('confirm')){
   const m=s.match(re);
   return m ? m[1].trim() : fallback;
 }
 function detectCity(s){
   const cities=['Surrey','Langley','Richmond','Delta','Coquitlam','Port Moody','Maple Ridge','Burnaby','Vancouver','North Vancouver','West Vancouver','East Vancouver'];
-  return cities.find(c=>new RegExp('\\b'+c.replace(' ','\\s+')+'\\b','i').test(s)) || 'À confirmer';
+  return cities.find(c=>new RegExp('\\b'+c.replace(' ','\\s+')+'\\b','i').test(s)) || t('confirm');
 }
 function detectCrew(city){
   if(['Richmond','Surrey','Langley','Delta'].includes(city)) return 'BC Hydro / PEI';
   if(['Coquitlam','Port Moody','Maple Ridge'].includes(city)) return 'BC Hydro / Graham';
   if(['Burnaby','Vancouver','North Vancouver','West Vancouver','East Vancouver'].includes(city)) return 'BC Hydro / Allteck';
-  return 'À confirmer';
+  return t('confirm');
 }
 function analyzeDispatch(){
   const s=document.getElementById('dispatchText').value.trim();
-  if(!s){ alert('Colle d’abord un message de dispatch.'); return; }
+  if(!s){ alert(t('emptyAlert')); return; }
 
   const date=detectDate(s);
   const time=normalizeTime(s);
   const city=detectCity(s);
 
   const phoneMatch=s.match(/\b(\d{3}[-.\s]\d{3}[-.\s]\d{4})\b/);
-  const phone=phoneMatch?phoneMatch[1]:'À confirmer';
+  const phone=phoneMatch?phoneMatch[1]:t('confirm');
 
   const poMatch=s.match(/\bPO\s+([A-Z0-9-]+)\b/i);
-  const po=poMatch?poMatch[1]:'À confirmer';
+  const po=poMatch?poMatch[1]:t('confirm');
 
   // L’adresse commence après « [ville] at » et s’arrête impérativement avant « do ».
   // Tout ce qui suit « do » est une instruction de travail, pas une partie de l’adresse.
   const addressStart=s.match(/\bin\s+(?:Surrey|Langley|Richmond|Delta|Coquitlam|Port Moody|Maple Ridge|Burnaby|Vancouver|North Vancouver|West Vancouver|East Vancouver)\s+at\s+/i);
-  let address='À confirmer';
+  let address=t('confirm');
   if(addressStart){
     let addressTail=s.slice(addressStart.index + addressStart[0].length);
     addressTail=addressTail.split(/\s+do\b/i)[0];
@@ -321,16 +412,16 @@ function analyzeDispatch(){
     addressTail=addressTail.split(/\s+Foreman\b/i)[0];
     addressTail=addressTail.split(/\s+PO\b/i)[0];
     addressTail=addressTail.split(/\s+\d{3}[-.\s]\d{3}[-.\s]\d{4}\b/i)[0];
-    address=addressTail.replace(/[.,;:()\-]+$/,'').trim() || 'À confirmer';
+    address=addressTail.replace(/[.,;:()\-]+$/,'').trim() || t('confirm');
   }
 
   const clientMatch=s.match(/\bfor\s+(.+?)(?=\s+-\s+|\s+in\s+(?:Surrey|Langley|Richmond|Delta|Coquitlam|Port Moody|Maple Ridge|Burnaby|Vancouver))/i);
-  const client=clientMatch?clientMatch[1].trim():'À confirmer';
+  const client=clientMatch?clientMatch[1].trim():t('confirm');
 
   const projectMatch=s.match(/\bfor\s+.+?\s+-\s+(.+?)\s+in\s+(?:Surrey|Langley|Richmond|Delta|Coquitlam|Port Moody|Maple Ridge|Burnaby|Vancouver)/i);
-  const project=projectMatch?projectMatch[1].trim():'À confirmer';
+  const project=projectMatch?projectMatch[1].trim():t('confirm');
 
-  let foreman='À confirmer';
+  let foreman=t('confirm');
   if(phoneMatch){
     const before=s.slice(0,phoneMatch.index).trim();
 
@@ -367,26 +458,27 @@ function analyzeDispatch(){
   document.getElementById('roleIcon').textContent=tcp?'🦺':'🚚';
   document.getElementById('roleName').textContent=tcp?'TCP — Traffic Control Person':'LCT — Lane Closure Technician';
   document.getElementById('roleDesc').textContent=tcp
-    ? 'Le rôle a été choisi avant l’import. Le module n’exige donc ni camion LCT ni TMP.'
-    : 'Le rôle a été choisi avant l’import. Le module affiche les informations liées au camion, au TMP et à la crew.';
+    ? t('tcpDesc')
+    : t('lctDesc');
 
   if(tcp){
-    document.getElementById('tcpTmp').textContent=/no\s*tmp/i.test(s)?'No TMP':'À confirmer';
-    document.getElementById('handDrawn').textContent=/hand[-\s]?drawn.*req/i.test(s)?'Required':'À confirmer';
+    document.getElementById('tcpTmp').textContent=/no\s*tmp/i.test(s)?t('noTmp'):t('confirm');
+    document.getElementById('handDrawn').textContent=/hand[-\s]?drawn.*req/i.test(s)?t('required'):t('confirm');
     document.getElementById('tcpForeman').textContent=foreman;
     document.getElementById('tcpPhone').textContent=phone;
     document.getElementById('tcpPo').textContent=po;
   }else{
     const truck=s.match(/\b(SCT\d+|Truck\s+[A-Z0-9-]+)\b/i);
     const tmp=s.match(/\bTMP\s+([A-Z0-9-]+)\b/i);
-    document.getElementById('lctTruck').textContent=truck?truck[1]:'À confirmer';
-    document.getElementById('lctTmp').textContent=tmp?tmp[1]:'À confirmer';
+    document.getElementById('lctTruck').textContent=truck?truck[1]:t('confirm');
+    document.getElementById('lctTmp').textContent=tmp?tmp[1]:t('confirm');
     document.getElementById('crewOut').textContent=detectCrew(city);
     document.getElementById('lctForeman').textContent=foreman;
     document.getElementById('lctPhone').textContent=phone;
     document.getElementById('lctPo').textContent=po;
   }
 }
+document.addEventListener('DOMContentLoaded',()=>setLanguage(currentLanguage));
 </script>
 </body>
 </html>
